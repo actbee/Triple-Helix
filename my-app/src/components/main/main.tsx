@@ -23,7 +23,7 @@ const Main = () => {
            <div className = "image">
 
                {displayedImage.length === 0 ? <></> :
-               <img width={400} alt={'user inputted'} src={displayedImage} height={280}  />
+               <img width={400} alt={'user inputted'} src={displayedImage} height={400}  />
                }               
 
             </div>
