@@ -7,13 +7,13 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const transImage = async(req, res)=>{
-    const {prompt, reqimage} = req.body;
+    const {reqprompt, reqimage} = req.body;
     try{
         const response = await openai.createImageEdit({
-            fs.createReadStream(reqimage),
-            prompt,
-            1,
-            "1024x1024",
+            image: fs.createReadStream(reqimage),
+            prompt: reqprompt,
+            n: 1,
+            size: "1024x1024"
         });
 
         const imageUrl = response.data.data[0].url;
