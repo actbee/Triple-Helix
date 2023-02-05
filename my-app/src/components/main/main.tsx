@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
+import axios from "axios";
 
 const Main = () => {
     const [displayedImage, setDisplayedImage] = useState("");
@@ -14,9 +15,29 @@ const Main = () => {
         console.log("running"); 
         console.log(newImages);
     };
+
     const Input = styled('input')({
         display: 'none',
     });
+
+
+    const calldalle = async () => {
+        
+         const localprompt = (document.getElementById("promptbox")! as HTMLFormElement).value;
+         //console.log(prompt);
+         const params ={
+            image: displayedImage,
+            prompt: localprompt
+         }
+        const response = await axios.post('http://localhost:5000/dalle/transimage', params);
+        //const newimg = response.data.data;
+        //setDisplayedImage(newimg);
+        console.log(response);
+       /*
+       const response = await axios.get('http://localhost:5000/dalle/');
+       console.log(response);
+       */
+    }
 
     return(
        <div className = "main">
@@ -47,7 +68,7 @@ const Main = () => {
                     rows = {2}
                 />
             </div>
-            <Button variant="outlined" component="span" > Confirm </Button>
+            <Button variant="outlined" component="span" onClick = {calldalle} > Confirm </Button>
        </div>
     );
 }
