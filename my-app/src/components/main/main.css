@@ -19,3 +19,8 @@
     margin-bottom: 3vh;
     width: 500px;
 }
+.buttonbox{
+    display: flex;
+    justify-content: space-between;
+    width: 30%;
+}

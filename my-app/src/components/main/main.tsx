@@ -21,23 +21,66 @@ const Main = () => {
     });
 
 
-    const calldalle = async () => {
+    const calldalle1 = async () => {
         
          const localprompt = (document.getElementById("promptbox")! as HTMLFormElement).value;
          //console.log(prompt);
+         
          const params ={
-            image: displayedImage,
-            prompt: localprompt
+            prompt: localprompt,
+            image: displayedImage
          }
+
+        
         const response = await axios.post('http://localhost:5000/dalle/transimage', params);
-        //const newimg = response.data.data;
-        //setDisplayedImage(newimg);
+        const newimg = response.data.data;
+        setDisplayedImage(newimg);
         console.log(response);
        /*
        const response = await axios.get('http://localhost:5000/dalle/');
        console.log(response);
        */
     }
+    const calldalle2 = async () => {
+        
+        const localprompt = (document.getElementById("promptbox")! as HTMLFormElement).value;
+        //console.log(prompt);
+        
+        const params ={
+           prompt: localprompt,
+           image: displayedImage
+        }
+
+       
+       const response = await axios.post('http://localhost:5000/dalle/transimage2', params);
+       const newimg = response.data.data;
+       setDisplayedImage(newimg);
+       console.log(response);
+      /*
+      const response = await axios.get('http://localhost:5000/dalle/');
+      console.log(response);
+      */
+   }
+   const calldalle3 = async () => {
+        
+    const localprompt = (document.getElementById("promptbox")! as HTMLFormElement).value;
+    //console.log(prompt);
+    
+    const params ={
+       prompt: localprompt,
+       image: displayedImage
+    }
+
+   
+   const response = await axios.post('http://localhost:5000/dalle/transimage3', params);
+   const newimg = response.data.data;
+   setDisplayedImage(newimg);
+   console.log(response);
+  /*
+  const response = await axios.get('http://localhost:5000/dalle/');
+  console.log(response);
+  */
+}
 
     return(
        <div className = "main">
@@ -68,7 +111,11 @@ const Main = () => {
                     rows = {2}
                 />
             </div>
-            <Button variant="outlined" component="span" onClick = {calldalle} > Confirm </Button>
+            <div className = "buttonbox">
+               <Button variant="outlined" component="span" onClick = {calldalle1} > F1 </Button>
+               <Button variant="outlined" component="span" onClick = {calldalle2} > F2 </Button>
+               <Button variant="outlined" component="span" onClick = {calldalle3} > F3 </Button>
+            </div>
        </div>
     );
 }
