@@ -4,8 +4,7 @@ const path = require('path');
 const { dirname } = require('path');
 
 const configuration = new Configuration({
-    // apiKey: process.env.OPENAI_API_KEY,
-    apiKey: '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',
+     apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
