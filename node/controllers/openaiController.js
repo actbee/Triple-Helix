@@ -4,7 +4,8 @@ const path = require('path');
 const { dirname } = require('path');
 
 const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+    // apiKey: process.env.OPENAI_API_KEY,
+    apiKey: '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',
 });
 const openai = new OpenAIApi(configuration);
 
@@ -12,6 +13,7 @@ const transImage = async(req, res)=>{
     //const {reqprompt, reqimage} = req.body;
     console.log("generated 1 begin!!!!");
     const reqprompt = req.body.prompt;
+   
     console.log(req.body);
     try{
         
@@ -47,7 +49,20 @@ const transImage2 = async(req, res) => {
     //const {reqprompt, reqimage} = req.body;
     console.log("generated 2 begin!!!!");
     const reqprompt = req.body.prompt;
-    const reqimage = req.body.image;
+    const reqimage = req.body.image[0];
+
+    const base64data = reqimage.replace(/^data:image\/\w+;base64,/, "");
+    console.log(base64data);
+    const databuffer = Buffer.from(base64data, 'base64');
+    fs.writeFile("./controllers/image.png", databuffer, function(err){
+        if(err){
+            console.log(err);
+        }
+        else{
+            console.log("success");
+        }
+    });
+
 
     const maskpath = path.join(__dirname, '2.png');
     const imagepath = path.join(__dirname, 'test.png');
