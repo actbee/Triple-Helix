@@ -7,6 +7,7 @@ import Input from '@mui/material/Input';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import axios from "axios";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Main = () => {
     const [displayedImage, setDisplayedImage] = useState("");
@@ -21,6 +22,15 @@ const Main = () => {
         display: 'none',
     });
 
+    const showSpinner = () => {
+       document.getElementById("spinner")!.hidden = false;
+      }
+      
+    const removeSpinner = () => {
+        document.getElementById("spinner")!.hidden = true;
+      }
+      
+
 
     const calldalle1 = async () => {
         
@@ -32,10 +42,11 @@ const Main = () => {
             image: displayedImage
          }
 
-        
+        showSpinner();
         const response = await axios.post('http://localhost:5000/dalle/transimage', params);
         const newimg = response.data.data;
         setDisplayedImage(newimg);
+        removeSpinner();
         console.log(response);
        /*
        const response = await axios.get('http://localhost:5000/dalle/');
@@ -46,18 +57,21 @@ const Main = () => {
 
         const localprompt = (document.getElementById("promptbox")! as HTMLFormElement).value;
         //console.log(prompt);
-        
         const params ={
            prompt: localprompt,
            image: displayedImage,
            mask: maskImage,
         }
-
-       
-       const response = await axios.post('http://localhost:5000/dalle/transimage2', params);
-       const newimg = response.data.data;
-       setDisplayedImage(newimg);
-       console.log(response);
+       showSpinner();
+       try{
+           const response = await axios.post('http://localhost:5000/dalle/transimage2', params);
+           const newimg = response.data.data;
+           setDisplayedImage(newimg);
+           console.log(response);
+       }catch(error){
+           alert("something went wrong, make sure you click init before use f2!");
+       }
+       removeSpinner();
       /*
       const response = await axios.get('http://localhost:5000/dalle/');
       console.log(response);
@@ -73,20 +87,17 @@ const Main = () => {
        image: displayedImage
     }
 
-   
+   showSpinner();
    const response = await axios.post('http://localhost:5000/dalle/transimage3', params);
    const newimg = response.data.data;
    setDisplayedImage(newimg);
    console.log(response);
-  /*
-  const response = await axios.get('http://localhost:5000/dalle/');
-  console.log(response);
-  */
+   removeSpinner();
 }
 
    const init = () => {
-     const canvas : any = document.getElementById("Canvas");
      const image : any = document.getElementById("uploadimage");
+     const canvas : any = document.getElementById("Canvas");
      const context = canvas.getContext("2d");
      canvas.width = image.width;
      canvas.height = image.height;
@@ -112,6 +123,7 @@ const Main = () => {
    }
 
    useEffect (() => {
+       removeSpinner();
        const canvas : any = document.getElementById("Canvas");
        canvas.addEventListener('mousemove', function(evt:any){
          const mousePos = getMousePos(canvas, evt);
@@ -147,6 +159,7 @@ const Main = () => {
                 <canvas id="Canvas"></canvas>
             </div>
             </div>
+            <div className="spinner" id ="spinner"> <CircularProgress /></div>
             <div className = "prompt">
                <TextField
                     fullWidth

@@ -2,9 +2,11 @@ const {Configuration, OpenAIApi} = require('openai');
 const fs = require('fs');
 const path = require('path');
 const { dirname } = require('path');
+const imageToBase64 = require('image-to-base64');
 
 const configuration = new Configuration({
      apiKey: process.env.OPENAI_API_KEY,
+     
 });
 const openai = new OpenAIApi(configuration);
 
@@ -13,8 +15,6 @@ const transImage = async(req, res)=>{
     //const {reqprompt, reqimage} = req.body;
     console.log("generated 1 begin!!!!");
     const reqprompt = req.body.prompt;
-   
-    console.log(req.body);
     try{
         
        
@@ -26,10 +26,17 @@ const transImage = async(req, res)=>{
         
         const imageUrl = response.data.data[0].url;
 
-        res.status(200).json({
-            success: true,
-            data: imageUrl,
-        });
+        imageToBase64(imageUrl).then(
+            (response) => {
+                const sendimg = "data:image/png;base64,"+response;
+                res.status(200).json({
+                    success: true,
+                    data: sendimg,
+                });
+            }
+        )
+
+
     } catch(error){
         if(error.response){
             console.log(error.response.status);
@@ -37,7 +44,6 @@ const transImage = async(req, res)=>{
         }else{
             console.log(error.message);
         }
-
         res.status(400).json({
             success: false,
             error: "The image could not be generated",
@@ -51,7 +57,6 @@ const transImage2 = async(req, res) => {
     const reqprompt = req.body.prompt;
     const reqimage = req.body.image;
     const reqmask = req.body.mask;
-    console.log(reqmask);
 
     const base64data = reqimage.replace(/^data:image\/\w+;base64,/, "");
     const databuffer = Buffer.from(base64data, 'base64');
@@ -90,10 +95,17 @@ const transImage2 = async(req, res) => {
             "256x256"
         );
         const imageUrl = response.data.data[0].url;
-        res.status(200).json({
-            success: true,
-            data: imageUrl,
-        });
+        imageToBase64(imageUrl).then(
+            (response) => {
+                const sendimg = "data:image/png;base64,"+response;
+                res.status(200).json({
+                    success: true,
+                    data: sendimg,
+                });
+            }
+        )
+       
+
     } catch(error){
         if(error.response){
             console.log(error.response.status);
@@ -101,12 +113,12 @@ const transImage2 = async(req, res) => {
         }else{
             console.log(error.message);
         }
-
         res.status(400).json({
             success: false,
             error: "The image could not be generated",
         });
     }
+
 }
 
 const transImage3 = async(req, res) => {
@@ -115,8 +127,18 @@ const transImage3 = async(req, res) => {
     const reqprompt = req.body.prompt;
     const reqimage = req.body.image;
 
-    const maskpath = path.join(__dirname, '2.png');
-    const imagepath = path.join(__dirname, 'test.png');
+    const base64data = reqimage.replace(/^data:image\/\w+;base64,/, "");
+    const databuffer = Buffer.from(base64data, 'base64');
+    fs.writeFile("./controllers/image.png", databuffer, function(err){
+        if(err){
+            console.log(err);
+        }
+        else{
+            console.log("success image");
+        }
+    });
+
+    const imagepath = path.join(__dirname, 'image.png');
 
     console.log(req.body);
     try{
@@ -129,10 +151,16 @@ const transImage3 = async(req, res) => {
       
         const imageUrl = response.data.data[0].url;
 
-        res.status(200).json({
-            success: true,
-            data: imageUrl,
-        });
+        imageToBase64(imageUrl).then(
+            (response) => {
+                const sendimg = "data:image/png;base64,"+response;
+                res.status(200).json({
+                    success: true,
+                    data: sendimg,
+                });
+            }
+        )
+
     } catch(error){
         if(error.response){
             console.log(error.response.status);
