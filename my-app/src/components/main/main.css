@@ -17,10 +17,24 @@
 .prompt{
     margin-top: 3vh;
     margin-bottom: 3vh;
-    width: 500px;
+    width: 600px;
 }
 .buttonbox{
     display: flex;
     justify-content: space-between;
     width: 30%;
 }
+.canvas{
+    height: 400px;
+    width: 450px;
+    margin-left: 10%;
+    margin-top: 4.5%;
+    border-style: solid;
+    border-color: black;
+}
+
+.imagebox{
+    display: flex;
+    direction: row;
+}
+

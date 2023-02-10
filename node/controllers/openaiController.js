@@ -8,6 +8,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
+
 const transImage = async(req, res)=>{
     //const {reqprompt, reqimage} = req.body;
     console.log("generated 1 begin!!!!");
@@ -48,25 +49,37 @@ const transImage2 = async(req, res) => {
     //const {reqprompt, reqimage} = req.body;
     console.log("generated 2 begin!!!!");
     const reqprompt = req.body.prompt;
-    const reqimage = req.body.image[0];
+    const reqimage = req.body.image;
+    const reqmask = req.body.mask;
+    console.log(reqmask);
 
     const base64data = reqimage.replace(/^data:image\/\w+;base64,/, "");
-    console.log(base64data);
     const databuffer = Buffer.from(base64data, 'base64');
     fs.writeFile("./controllers/image.png", databuffer, function(err){
         if(err){
             console.log(err);
         }
         else{
-            console.log("success");
+            console.log("success image");
+        }
+    });
+ 
+    const base64datamask = reqmask.replace(/^data:image\/\w+;base64,/, "");
+    const databuffermask = Buffer.from(base64datamask, 'base64');
+    fs.writeFile("./controllers/mask.png", databuffermask, function(err){
+        if(err){
+            console.log(err);
+        }
+        else{
+            console.log("success mask");
         }
     });
 
 
-    const maskpath = path.join(__dirname, '2.png');
-    const imagepath = path.join(__dirname, 'test.png');
+    const maskpath = path.join(__dirname, 'mask.png');
+    const imagepath = path.join(__dirname, 'image.png');
 
-    console.log(req.body);
+ 
     try{
         
         const response = await openai.createImageEdit(
@@ -77,7 +90,6 @@ const transImage2 = async(req, res) => {
             "256x256"
         );
         const imageUrl = response.data.data[0].url;
-
         res.status(200).json({
             success: true,
             data: imageUrl,
