@@ -10,6 +10,7 @@ import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
 import {useRecoilState, useRecoilValue} from "recoil";
 import { currentimage } from "../../store";
+import { Link } from "react-router-dom";
 
 
 const Manage = () => {
@@ -105,7 +106,7 @@ const Manage = () => {
      canvas.width = image.width;
      canvas.height = image.height;
      context.drawImage(image, 0 ,0, canvas.width, canvas.height);
-     setDisplayedImage(canvas.toDataURL());
+     setDisplayedImage({path: canvas.toDataURL(), id: 0});
      const imageData = context.getImageData(0,0, canvas.width, canvas.height);
      /*
      for(var i = 3; i<imageData.data.length;i+=4){
@@ -159,6 +160,13 @@ const Manage = () => {
 
     return(
        <div className = "main">
+        <div className = "back">
+         <Button variant="outlined">
+                <Link to = "/"  style={{ color: 'inherit', textDecoration: 'inherit'}}>
+                Back
+                </Link>
+        </Button>
+        </div>
         <div className = "imagebox">
             <div className = "left">
            <div className = "image">

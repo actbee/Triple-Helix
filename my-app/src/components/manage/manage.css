@@ -6,6 +6,12 @@
     flex-direction: column;
     align-items: center;
 }
+.back{
+    position: absolute;
+    left: 5%;
+    top:5%;
+    
+}
 .image{
     margin-top: 5vh;
     width: 400px;
