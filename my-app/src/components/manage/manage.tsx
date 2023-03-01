@@ -1,4 +1,4 @@
-import "./main.css";
+import "./manage.css";
 import React from "react";
 import {useState, useEffect, useRef} from "react";
 import {uploadDocuments} from "../../tools/imageuploader";
@@ -8,9 +8,12 @@ import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
+import {useRecoilState, useRecoilValue} from "recoil";
+import { currentimage } from "../../store";
 
-const Main = () => {
-    const [displayedImage, setDisplayedImage] = useState("");
+
+const Manage = () => {
+    const [displayedImage, setDisplayedImage] = useRecoilState(currentimage);
     const [maskImage, setmaskImage] = useState("");
     const updateImages = (newImages:any) => {   
         const images = uploadDocuments(Object.values(newImages.target.files), setDisplayedImage);   
@@ -104,11 +107,13 @@ const Main = () => {
      context.drawImage(image, 0 ,0, canvas.width, canvas.height);
      setDisplayedImage(canvas.toDataURL());
      const imageData = context.getImageData(0,0, canvas.width, canvas.height);
+     /*
      for(var i = 3; i<imageData.data.length;i+=4){
         if(i>288000){
         imageData.data[i] = 0;
         }
      }
+     */
      console.log(imageData.data);
      context.putImageData(imageData, 0 ,0);
      setmaskImage(canvas.toDataURL());
@@ -125,9 +130,30 @@ const Main = () => {
    useEffect (() => {
        removeSpinner();
        const canvas : any = document.getElementById("Canvas");
-       canvas.addEventListener('mousemove', function(evt:any){
-         const mousePos = getMousePos(canvas, evt);
-         console.log("mouse position:"+mousePos.x+","+mousePos.y);
+    
+       canvas.addEventListener('mousedown', function(evt: any){
+        const context = canvas.getContext("2d");
+        const imageData = context.getImageData(0,0, canvas.width, canvas.height);
+        const mousePos = getMousePos(canvas, evt);
+        const x = mousePos.x;
+        const y = mousePos.y;
+        console.log(x+","+y);
+        if(x>=0 && y>=0){
+        for(var i = 3; i<imageData.data.length;i+=4){
+            for (var dify = 0; dify<20; dify++){
+                for(var difx = 0; difx<20; difx++){
+                   if(i>(x-difx)*4+(y-dify)*1600 && i<(x+difx)*4+(y-dify)*1600){
+                   imageData.data[i] = 0;
+                   }
+                   if(i>(x-difx)*4+(y+dify)*1600 && i<(x+difx)*4+(y+dify)*1600){
+                    imageData.data[i] = 0;
+                    }
+                }
+            }
+        }
+       }
+        context.putImageData(imageData, 0 ,0);
+        setmaskImage(canvas.toDataURL());
        }, false);
    }, []);
 
@@ -137,9 +163,11 @@ const Main = () => {
             <div className = "left">
            <div className = "image">
 
-               {displayedImage.length === 0 ? <></> :
-               <img id = "uploadimage" width={400} alt={'user inputted'} src={displayedImage} height={400}  />
-               }               
+               {displayedImage.id === 0 ? 
+                <img id = "uploadimage" width={400} alt={'user inputted'} src={displayedImage.path} height={400}  /> :
+               <img id = "uploadimage" width={400} alt={'user inputted'} src={"../images/"+displayedImage.path} height={400}  />
+               }    
+
 
             </div>
             <div className = "content">
@@ -178,4 +206,4 @@ const Main = () => {
     );
 }
 
-export default Main;
+export default Manage;

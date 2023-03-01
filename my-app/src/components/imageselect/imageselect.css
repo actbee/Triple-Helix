@@ -1,0 +1,35 @@
+.imagelibrary{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+}
+
+.image-database{
+    width: 70%;
+    height: 100%;
+    overflow-y: scroll;
+    padding: 10px;
+    border-style: solid;
+    margin: 30px;
+    border-width: 5px;
+}
+.space{
+    margin: 10px;
+}
+
+.confirm-box{
+    width:30vw;
+    height: 40vh;
+    margin-top: 20%;;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    overflow-y: hidden;
+    
+}
+
+.downspace{
+    margin-bottom: 20px;
+}

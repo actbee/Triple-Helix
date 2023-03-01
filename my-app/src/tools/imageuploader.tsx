@@ -21,7 +21,7 @@ export const uploadDocuments = async (files:any, setDisplayedImage:any, shownIma
 
     // Wait for all promises to be resolved
     await Promise.all(filePromises).then((values) => {
-        setDisplayedImage(values);
+        setDisplayedImage({path: values, id: 0});
     })
 
   };
