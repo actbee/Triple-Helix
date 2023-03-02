@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 const Manage = () => {
     const [displayedImage, setDisplayedImage] = useRecoilState(currentimage);
     const [maskImage, setmaskImage] = useState("");
+    const [isdalle2, setisdalle2] = useState(0);
     const updateImages = (newImages:any) => {   
         const images = uploadDocuments(Object.values(newImages.target.files), setDisplayedImage);   
         console.log("running"); 
@@ -43,13 +44,13 @@ const Manage = () => {
          
          const params ={
             prompt: localprompt,
-            image: displayedImage
+            image: displayedImage.path
          }
 
         showSpinner();
         const response = await axios.post('http://localhost:5000/dalle/transimage', params);
         const newimg = response.data.data;
-        setDisplayedImage(newimg);
+        setDisplayedImage({path: newimg, id: 0});
         removeSpinner();
         console.log(response);
        /*
@@ -58,24 +59,24 @@ const Manage = () => {
        */
     }
     const calldalle2 = async () => {
-
         const localprompt = (document.getElementById("promptbox")! as HTMLFormElement).value;
         //console.log(prompt);
         const params ={
            prompt: localprompt,
-           image: displayedImage,
+           image: displayedImage.path,
            mask: maskImage,
         }
        showSpinner();
        try{
            const response = await axios.post('http://localhost:5000/dalle/transimage2', params);
            const newimg = response.data.data;
-           setDisplayedImage(newimg);
+           setDisplayedImage({path: newimg, id: 0});
            console.log(response);
        }catch(error){
            alert("something went wrong, make sure you click init before use f2!");
        }
        removeSpinner();
+       setisdalle2(0);
       /*
       const response = await axios.get('http://localhost:5000/dalle/');
       console.log(response);
@@ -88,18 +89,19 @@ const Manage = () => {
     
     const params ={
        prompt: localprompt,
-       image: displayedImage
+       image: displayedImage.path
     }
 
    showSpinner();
    const response = await axios.post('http://localhost:5000/dalle/transimage3', params);
    const newimg = response.data.data;
-   setDisplayedImage(newimg);
+   setDisplayedImage({path: newimg, id: 0});
    console.log(response);
    removeSpinner();
 }
 
    const init = () => {
+     setisdalle2(1);
      const image : any = document.getElementById("uploadimage");
      const canvas : any = document.getElementById("Canvas");
      const context = canvas.getContext("2d");
@@ -129,6 +131,7 @@ const Manage = () => {
    }
 
    useEffect (() => {
+       setisdalle2(0);
        removeSpinner();
        const canvas : any = document.getElementById("Canvas");
     
@@ -204,12 +207,19 @@ const Manage = () => {
                     rows = {2}
                 />
             </div>
-            <div className = "buttonbox">
-               <Button variant="outlined" component="span" onClick = {calldalle1} > F1 </Button>
-               <Button variant="outlined" component="span" onClick = {calldalle2} > F2 </Button>
-               <Button variant="outlined" component="span" onClick = {calldalle3} > F3 </Button>
-               <Button variant="outlined" component="span" onClick = {init} > INIT </Button>
-            </div>
+                {  isdalle2==0 &&
+                 <div className = "buttonbox">
+                    <Button variant="outlined" component="span" onClick = {calldalle1} > F1 </Button>
+                    <Button variant="outlined" component="span" onClick = {init} > F2 </Button>
+                    <Button variant="outlined" component="span" onClick = {calldalle3} > F3 </Button>
+                 </div>   
+                }
+                {
+                    isdalle2 == 1 &&
+                 <div className = "buttonbox">
+                    <Button variant="outlined" component="span" onClick = {calldalle2} > Confirm </Button>
+                 </div>   
+                }
        </div>
     );
 }

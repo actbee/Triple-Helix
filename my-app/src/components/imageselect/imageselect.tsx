@@ -10,6 +10,10 @@ const Imageselect = () => {
 
     const [selectedimage, setselectedimage] = useRecoilState(currentimage);
 
+    const copy = () => {
+        
+    }
+
     const chooseimage = ( value: any, index: number) => {
 
      var originalbutton = document.getElementById(selectedimage.id.toString());
@@ -34,16 +38,16 @@ const Imageselect = () => {
                 if(index!=0)
                 return (   
             <Button className = "space" id = {index.toString()} onClick = {() => chooseimage(value, index)}>
-            <img src = {"../images/"+value.path} height = "200px" width = "200px"/>
+            <img src = {"../original/"+value.path} height = "200px" width = "200px"/>
             </Button>  ) }
             )}
             
             </div>
 
             <div className = "confirm-box">
-            <img  className = "downspace" src = {"../images/"+selectedimage.path} height = "200px" width = "200px"/>
+            <img  className = "downspace" src = {"../original/"+selectedimage.path} height = "200px" width = "200px"/>
             <Button variant="contained">
-                <Link to = "/manage"  style={{ color: 'inherit', textDecoration: 'inherit'}}>
+                <Link to = "/manage" onClick = {copy} style={{ color: 'inherit', textDecoration: 'inherit'}}>
                 Confirm
                 </Link>
             </Button>
